@@ -47,13 +47,14 @@ class ProductResource(ModelResource):
 class CategoryResource(ModelResource):
     parent = fields.ForeignKey("lfs_rest.api.CategoryResource", "parent", null=True)
     products = fields.ToManyField("lfs_rest.api.ProductResource", "products", null=True)
+    subcategories = fields.ToManyField("lfs_rest.api.CategoryResource", "subcategories", null=True")
 
     class Meta:
         queryset = Category.objects.all()
         serializer = LFSSerializer()
         resource_name = 'category'
         authorization = Authorization()
-        authentication = BasicAuthentication()
+        authentication = Authentication()
         excludes = ["level", "uid"]
         filtering = {
             "name": ALL,
