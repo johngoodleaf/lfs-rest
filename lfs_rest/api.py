@@ -6,7 +6,7 @@ from tastypie import fields
 from tastypie.authorization import Authorization
 from tastypie.authentication import Authentication, BasicAuthentication
 from tastypie.resources import ModelResource
-from tastypie.resources import ALL
+from tastypie.resources import ALL, ALL_WITH_RELATIONS
 from tastypie.serializers import Serializer
 
 # lfs imports
@@ -46,7 +46,8 @@ class ProductResource(ModelResource):
 
         filtering = {
             "sku": ALL,
-            "categories": ALL,
+            "categories": ALL_WITH_RELATIONS,
+            "slug": ALL,
     }
 
 
@@ -77,6 +78,8 @@ class CategoryResource(ModelResource):
                     ]
         filtering = {
             "name": ALL,
+            "slug": ALL_WITH_RELATIONS,
+            "parent": ALL_WITH_RELATIONS,
         }
 
     def _strip_category_fields(self, datadictionary):
