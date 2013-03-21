@@ -50,6 +50,19 @@ class ProductResource(ModelResource):
             "slug": ALL,
     }
 
+    def dehydrate(self, bundle):
+        try:
+            i = bundle.obj.get_image().image
+            properties = [ x for x in dir(i) if x.startswith('url')]
+            vals = dict()
+            for p in properties:
+                vals[p] = getattr(i, p)
+
+            bundle.data['image_urls'] = vals
+        except AttributeError:
+            bundle.data['image_urls'] = {}
+        return bundle
+
 
 class CategoryResource(ModelResource):
     parent = fields.ForeignKey("lfs_rest.api.CategoryResource", "parent", null=True)
