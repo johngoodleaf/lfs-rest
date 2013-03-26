@@ -13,9 +13,9 @@ import requests
 @csrf_exempt
 def submitted(request):
     if request.method == "POST":
-        products = request.POST.getlist('products')
+        products = json.loads(request.raw_post_data)
         print request.raw_post_data
-        print request.POST
+        print products
         return HttpResponse(json.dumps(products),
             content_type="application/json")
     else:
