@@ -14,7 +14,7 @@ import requests
 def submitted(request):
     if request.method == "POST":
         products = request.POST.getlist('products')
-        print products
+        print request.raw_post_data
         print request.POST
         return HttpResponse(json.dumps(products),
             content_type="application/json")
