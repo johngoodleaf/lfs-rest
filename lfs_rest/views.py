@@ -12,12 +12,12 @@ import requests
 
 @csrf_exempt
 def submitted(request):
-    if request.POST:
-        products = request.POST['products']
+    if request.method == "POST":
+        products = request.POST.getlist('products')
         print products
         print request.POST
         return HttpResponse(
-            json.dumps(request.POST['products'],
+            json.dumps(products,
                 content_type="application/json"))
     else:
         return HttpResponse()
