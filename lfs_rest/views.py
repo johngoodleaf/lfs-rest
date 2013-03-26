@@ -16,6 +16,6 @@ def submitted(request):
         print request.POST
         return HttpResponse(
             json.dumps(request.POST['products'],
-                content_type="application/json")
+                content_type="application/json"))
     else:
         return HttpResponse()
