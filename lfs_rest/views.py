@@ -13,6 +13,8 @@ import requests
 @csrf_exempt
 def submitted(request):
     if request.POST:
+        products = request.POST['products']
+        print products
         print request.POST
         return HttpResponse(
             json.dumps(request.POST['products'],
