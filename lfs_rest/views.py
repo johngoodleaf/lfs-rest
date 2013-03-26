@@ -16,8 +16,7 @@ def submitted(request):
         products = request.POST.getlist('products')
         print products
         print request.POST
-        return HttpResponse(
-            json.dumps(products,
-                content_type="application/json"))
+        return HttpResponse(json.dumps(products),
+            content_type="application/json")
     else:
         return HttpResponse()
