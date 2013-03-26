@@ -11,6 +11,7 @@ from lfs_rest.api import CustomerResource
 from lfs_rest.api import OrderResource
 from lfs_rest.api import OrderItemResource
 from lfs_rest.api import ProductResource
+from . import views
 
 v1_api = Api(api_name='api')
 v1_api.register(AddressResource())
@@ -21,5 +22,6 @@ v1_api.register(OrderResource())
 v1_api.register(OrderItemResource())
 
 urlpatterns = patterns('',
+    (r'submitted', views.submitted),
     (r'', include(v1_api.urls)),
 )
