@@ -38,7 +38,7 @@ def submitted(request):
             secret='7296ddd9aede74695af1')
 
         p['order_channel'].trigger('order:pushed',
-            {'products': product_list,
+            {'products': product_data,
              'cost': cost
              })
         return HttpResponse(json.dumps(
