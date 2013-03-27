@@ -29,14 +29,18 @@ def submitted(request):
             cart.add(product, amount=p['quantity'])
             print product
 
-        print cart.get_price_net(request)
+        cost = cart.get_price_net(request)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
             secret='7296ddd9aede74695af1')
 
-        p['order_channel'].trigger('order:pushed', {'products': products})
-        return HttpResponse(json.dumps(products),
+        p['order_channel'].trigger('order:pushed',
+            {'products': product_list,
+             'cost': cost
+             })
+        return HttpResponse(json.dumps(
+            {'products': product_list, 'cost': cost}),
             content_type="application/json")
     else:
         return HttpResponse()
