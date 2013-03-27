@@ -22,6 +22,7 @@ def submitted(request):
         print product_list
 
         cart = Cart()
+        cart.save()
 
         for p in product_list:
             product = Product.objects.get(pk=p['id'])
