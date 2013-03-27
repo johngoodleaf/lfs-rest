@@ -9,6 +9,7 @@ from django.http import HttpResponse
 
 from lfs.catalog.models import Product
 from lfs.cart.models import Cart, CartItem
+from django.forms import model_to_dict
 import requests
 import pusher
 
@@ -24,10 +25,11 @@ def submitted(request):
         cart = Cart()
         cart.save()
 
+        product_data = []
         for p in product_list:
             product = Product.objects.get(pk=p['id'])
             cart.add(product, amount=p['quantity'])
-            print product
+            product_data.append(model_to_dict(product))
 
         cost = cart.get_price_net(request)
 
@@ -40,7 +42,7 @@ def submitted(request):
              'cost': cost
              })
         return HttpResponse(json.dumps(
-            {'products': product_list, 'cost': cost}),
+            {'products': product_data, 'cost': cost}),
             content_type="application/json")
     else:
         return HttpResponse()
