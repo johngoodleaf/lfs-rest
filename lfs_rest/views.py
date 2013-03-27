@@ -22,7 +22,7 @@ def submitted(request):
             key='1ebb3cc2881a1562cc37',
             secret='7296ddd9aede74695af1')
 
-        p['order_channel'].trigger('my_event', {'products': products})
+        p['order_channel'].trigger('order:pushed', {'products': products})
         return HttpResponse(json.dumps(products),
             content_type="application/json")
     else:
