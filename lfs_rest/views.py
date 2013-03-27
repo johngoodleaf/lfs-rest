@@ -26,10 +26,10 @@ def submitted(request):
 
         for p in product_list:
             product = Product.objects.get(pk=p['id'])
-            cart.add(product)
+            cart.add(product, amount=p['quantity'])
             print product
 
-        print cart
+        print cart.get_price_net(request)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
