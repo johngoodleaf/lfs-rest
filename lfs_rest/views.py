@@ -41,7 +41,8 @@ def submitted(request):
 
         p['order_channel'].trigger('order:pushed',
             {'products': product_data,
-             'cost': cost
+             'cost': cost,
+             'order': cart.id,
              })
         return HttpResponse(json.dumps(
             {'products': product_data, 'cost': cost}),
