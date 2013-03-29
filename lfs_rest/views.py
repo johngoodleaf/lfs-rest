@@ -29,7 +29,9 @@ def submitted(request):
         for p in product_list:
             product = Product.objects.get(pk=p['id'])
             cart.add(product, amount=p['quantity'])
-            product_data.append(model_to_dict(product))
+            d = model_to_dict(product)
+            d['quantity'] = p['quantity']
+            product_data.append(d)
 
         cost = cart.get_price_net(request)
 
