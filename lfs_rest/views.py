@@ -34,6 +34,9 @@ def submitted(request):
             product_data.append(d)
 
         cost = cart.get_price_net(request)
+        tax = cart.get_tax(request)
+
+        cost = cost + tax
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
