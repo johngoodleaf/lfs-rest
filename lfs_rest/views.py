@@ -12,6 +12,8 @@ from lfs.cart.models import Cart, CartItem
 from django.forms import model_to_dict
 import requests
 import pusher
+import locale
+locale.setlocale(locale.LC_ALL, '')
 
 @csrf_exempt
 def submitted(request):
@@ -36,7 +38,7 @@ def submitted(request):
         cost = cart.get_price_net(request)
         tax = cart.get_tax(request)
 
-        cost = cost + tax
+        cost = locale.currency((cost + tax), grouping=True)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
