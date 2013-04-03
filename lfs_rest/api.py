@@ -63,7 +63,7 @@ class ProductResource(ModelResource):
             bundle.data['image_urls'] = {}
         try:
             print bundle.obj.get_product_tax()
-            print bundle.obj.get_tax()
+            print bundle.obj.get_tax(request=bundle.request)
             tax = bundle.obj.get_product_tax()
         except Exception, e:
             print e
