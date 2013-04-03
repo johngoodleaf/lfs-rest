@@ -62,9 +62,7 @@ class ProductResource(ModelResource):
         except AttributeError:
             bundle.data['image_urls'] = {}
         try:
-            print bundle.obj.get_product_tax()
-            print bundle.obj.get_tax(request=bundle.request)
-            tax = bundle.obj.get_product_tax()
+            tax = bundle.obj.get_tax(request=bundle.request)
         except Exception, e:
             print e
             tax = 0
