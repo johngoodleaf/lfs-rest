@@ -65,7 +65,8 @@ class ProductResource(ModelResource):
             print bundle.obj.get_product_tax()
             print bundle.obj.get_tax()
             tax = bundle.obj.get_product_tax()
-        except:
+        except Exception, e:
+            print e
             tax = 0
         bundle.data['tax'] = tax
 
