@@ -20,6 +20,7 @@ def submitted(request):
     if request.method == "POST":
         products = json.loads(request.raw_post_data)
         product_list = products['products']
+        gratuity = float(products['gratuity'])
 
         print request.raw_post_data
         print product_list
@@ -38,7 +39,7 @@ def submitted(request):
         cost = cart.get_price_net(request)
         tax = cart.get_tax(request)
 
-        cost = locale.currency((cost + tax), grouping=True)
+        cost = locale.currency((cost + tax + gratuity), grouping=True)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
