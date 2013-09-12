@@ -17,9 +17,11 @@ locale.setlocale(locale.LC_ALL, '')
 
 CORE_URL = 'http://localhost:8001/'
 CORE_ORDER_PATH = 'customer/api/customer/'
-def core_submit(request, order):
+def core_submit(request, order, *args, **kwargs):
     print request
     print order
+    print args
+    print kwargs
     #r = requests.post(CORE_URL + CORE_ORDER_PATH +)
 
 @csrf_exempt
@@ -29,8 +31,8 @@ def submitted(request, *args, **kwargs):
         product_list = products['products']
         gratuity = float(products['gratuity'])
 
-        print request.raw_post_data
-        print product_list
+        #print request.raw_post_data
+        #print product_list
 
         cart = Cart()
         cart.save()
