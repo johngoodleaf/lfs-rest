@@ -48,7 +48,7 @@ def submitted(request, *args, **kwargs):
 
         cost = locale.currency((cost + tax + gratuity), grouping=True)
 
-        core_submit(request, products, cost)
+        core_submit(request, product_data, cost)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
