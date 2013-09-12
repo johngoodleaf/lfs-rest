@@ -16,10 +16,11 @@ import locale
 locale.setlocale(locale.LC_ALL, '')
 
 CORE_URL = 'http://localhost:8001/'
-CORE_ORDER_PATH = 'customer/api/customer/
+CORE_ORDER_PATH = 'customer/api/customer/'
 def core_submit(request, order):
-
-    r = requests.post()
+    print request
+    print order
+    #r = requests.post(CORE_URL + CORE_ORDER_PATH +)
 
 @csrf_exempt
 def submitted(request, *args, **kwargs):
@@ -46,6 +47,8 @@ def submitted(request, *args, **kwargs):
         tax = cart.get_tax(request)
 
         cost = locale.currency((cost + tax + gratuity), grouping=True)
+
+        core_submit(request, products, cost)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
