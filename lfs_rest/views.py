@@ -15,8 +15,14 @@ import pusher
 import locale
 locale.setlocale(locale.LC_ALL, '')
 
+CORE_URL = 'http://localhost:8001/'
+CORE_ORDER_PATH = 'customer/api/customer/
+def core_submit(request, order):
+
+    r = requests.post()
+
 @csrf_exempt
-def submitted(request):
+def submitted(request, *args, **kwargs):
     if request.method == "POST":
         products = json.loads(request.raw_post_data)
         product_list = products['products']
