@@ -28,5 +28,6 @@ setup(name='lfs_rest',
       dependency_links=["http://pypi.iqpp.de/"],
       install_requires=[
         'setuptools',
+        'braintree',
       ],
       )
