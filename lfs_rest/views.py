@@ -17,10 +17,7 @@ locale.setlocale(locale.LC_ALL, '')
 
 CORE_URL = 'http://localhost:8001/'
 CORE_ORDER_PATH = 'customer/api/customer/'
-def core_submit(request, order, *args, **kwargs):
-    print request
-    print order
-    print args
+def core_submit(request, order, cost, *args, **kwargs):
     print kwargs
     #r = requests.post(CORE_URL + CORE_ORDER_PATH +)
 
