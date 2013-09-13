@@ -24,9 +24,17 @@ def core_submit(request, order, *args, **kwargs):
     print kwargs
     #r = requests.post(CORE_URL + CORE_ORDER_PATH +)
 
+def check_auth(request):
+    incoming_headers = request.META
+    headers = {k:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
+    print headers
+    #r = requests.get()
+
+
 @csrf_exempt
 def submitted(request, *args, **kwargs):
     if request.method == "POST":
+        check_auth(request)
         products = json.loads(request.raw_post_data)
         product_list = products['products']
         gratuity = float(products['gratuity'])
