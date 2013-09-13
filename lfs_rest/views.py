@@ -28,13 +28,16 @@ def check_auth(request):
     incoming_headers = request.META
     headers = {k:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
     print headers
-    #r = requests.get()
+    r = requests.get('http://localhost:8001/customer/api-token-auth/',
+        headers=headers)
+    return json.loads(r.json())
 
 
 @csrf_exempt
 def submitted(request, *args, **kwargs):
     if request.method == "POST":
-        check_auth(request)
+        d = check_auth(request)
+        print d
         products = json.loads(request.raw_post_data)
         product_list = products['products']
         gratuity = float(products['gratuity'])
