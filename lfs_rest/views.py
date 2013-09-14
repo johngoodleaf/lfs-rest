@@ -21,9 +21,11 @@ CORE_ORDER_PATH = 'customer/api/customer/'
 def core_submit(request, order, cost, auth_check, *args, **kwargs):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
-    r = requests.post(CORE_URL + CORE_ORDER_PATH + auth_check['user_id'] + '/order/',
-        data=order, headers=headers)
-
+    r = requests.post("%s%s%s/order/" % (CORE_URL,
+                                         CORE_ORDER_PATH,
+                                         auth_check['user_id'],
+                                         data=order,
+                                         headers=headers))
     print r.text
 
 def check_auth(request):
