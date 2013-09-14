@@ -27,6 +27,8 @@ def check_auth(request):
     print headers
     r = requests.get('http://localhost:8001/customer/api-token-auth/',
         headers=headers)
+    print r.json()
+    print r.text
     return r
 
 
