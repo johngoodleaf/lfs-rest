@@ -23,7 +23,7 @@ def core_submit(request, order, cost, *args, **kwargs):
 
 def check_auth(request):
     incoming_headers = request.META
-    headers = {k:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
+    headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
     print headers
     r = requests.get('http://localhost:8001/customer/api-token-auth/',
         headers=headers)
