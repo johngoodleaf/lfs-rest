@@ -18,6 +18,7 @@ locale.setlocale(locale.LC_ALL, '')
 CORE_URL = 'http://localhost:8001/'
 CORE_ORDER_PATH = 'customer/api/customer/'
 def core_submit(request, order, cost, *args, **kwargs):
+    incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
     print "Kwargs are: %s" % kwargs
     #r = requests.post(CORE_URL + CORE_ORDER_PATH)
