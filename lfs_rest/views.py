@@ -21,8 +21,9 @@ CORE_ORDER_PATH = 'customer/api/customer/'
 def core_submit(request, order, cost, auth_check, *args, **kwargs):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
-    print auth_check
-    post_url = "http://localhost:8001/customer/api/customer/%s/order/" % auth_check['user_id']
+    user_id = auth_check['user_id']
+    print user_id
+    post_url = "http://localhost:8001/customer/api/customer/%s/order/" % user_id
     r = requests.post(post_url, data=order, headers=headers)
     print r.text
 
@@ -70,7 +71,7 @@ def submitted(request, *args, **kwargs):
 
         cost = locale.currency((cost + tax + gratuity), grouping=True)
 
-        core_submit(request, product_data,
+        order_handler = core_submit(request, product_data,
             cost, auth_check=literal_eval(check_result))
 
         p = pusher.Pusher(app_id='40239',
