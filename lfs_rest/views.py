@@ -41,10 +41,10 @@ def check_auth(request):
 @csrf_exempt
 def submitted(request, *args, **kwargs):
     if request.method == "POST":
-        d = check_auth(request)
-        if 'ERROR' in d:
+        check_result = check_auth(request)
+        if 'ERROR' in check_result:
             print "Found ERROR condition"
-            return HttpResponse(json.dumps({'ERROR': d}),
+            return HttpResponse(json.dumps({'ERROR': check_result}),
                 content_type="application/json")
 
         products = json.loads(request.raw_post_data)
@@ -70,7 +70,7 @@ def submitted(request, *args, **kwargs):
 
         cost = locale.currency((cost + tax + gratuity), grouping=True)
 
-        core_submit(request, product_data, cost, d)
+        core_submit(request, product_data, cost, check_result)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
