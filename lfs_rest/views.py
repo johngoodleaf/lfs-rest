@@ -21,6 +21,7 @@ def core_submit(request, order, cost, *args, **kwargs):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
     print "Kwargs are: %s" % kwargs
+    print args
     #r = requests.post(CORE_URL + CORE_ORDER_PATH)
 
     #r = requests.post(CORE_URL + CORE_ORDER_PATH +)
