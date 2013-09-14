@@ -18,7 +18,10 @@ locale.setlocale(locale.LC_ALL, '')
 CORE_URL = 'http://localhost:8001/'
 CORE_ORDER_PATH = 'customer/api/customer/'
 def core_submit(request, order, cost, *args, **kwargs):
-    print kwargs
+    headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
+    print "Kwargs are: %s" % kwargs
+    #r = requests.post(CORE_URL + CORE_ORDER_PATH)
+
     #r = requests.post(CORE_URL + CORE_ORDER_PATH +)
 
 def check_auth(request):
@@ -37,7 +40,11 @@ def check_auth(request):
 def submitted(request, *args, **kwargs):
     if request.method == "POST":
         d = check_auth(request)
-        print d
+        if 'ERROR' in d:
+            print "Found ERROR condition"
+            return HttpResponse(json.dumps({'ERROR': d}),
+                content_type="application/json")
+
         products = json.loads(request.raw_post_data)
         product_list = products['products']
         gratuity = float(products['gratuity'])
@@ -61,7 +68,7 @@ def submitted(request, *args, **kwargs):
 
         cost = locale.currency((cost + tax + gratuity), grouping=True)
 
-        core_submit(request, product_data, cost)
+        core_submit(request, product_data, cost, d)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
