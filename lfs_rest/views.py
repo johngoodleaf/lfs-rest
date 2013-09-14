@@ -30,7 +30,7 @@ def check_auth(request):
     if "ERROR" in r.text:
         return r.text
     else:
-        return json.loads(r.json())
+        return r.text
 
 
 @csrf_exempt
