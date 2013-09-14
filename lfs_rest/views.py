@@ -18,7 +18,7 @@ locale.setlocale(locale.LC_ALL, '')
 
 CORE_URL = 'http://localhost:8001/'
 CORE_ORDER_PATH = 'customer/api/customer/'
-def core_submit(request, order, cost, *args, **kwargs):
+def core_submit(request, order, cost, auth_check, *args, **kwargs):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
     print "Kwargs are: %s" % kwargs
@@ -71,7 +71,8 @@ def submitted(request, *args, **kwargs):
 
         cost = locale.currency((cost + tax + gratuity), grouping=True)
 
-        core_submit(request, product_data, cost, literal_eval(check_result)[0])
+        core_submit(request, product_data,
+            cost, auth_check=literal_eval(check_result))
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
