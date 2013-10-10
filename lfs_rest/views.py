@@ -15,7 +15,7 @@ import requests
 import pusher
 import locale
 import os
-locale.setlocale(locale.LC_ALL, '')
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 if not 'DEV' in os.environ:
     CORE_URL = 'https://core.stadi.us/'
@@ -23,20 +23,26 @@ else:
     CORE_URL = 'http://localhost:8001/'
 CORE_ORDER_PATH = 'customer/api/customer/'
 
+
+
 def core_submit(request, order, cost, auth_check, *args, **kwargs):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
     user_id = auth_check['user_id']
     print user_id
     post_url = "%s%s%s/order/" % (CORE_URL, CORE_ORDER_PATH, user_id)
-    r = requests.post(post_url, data=order, headers=headers)
-    print r.text
+    print post_url
+    data = json.dumps(order)
+    r = requests.post(post_url, data=data, headers=headers)
+    return r
+
 
 def check_auth(request):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
     print headers
-    r = requests.get(CORE_URL + "customer/api-token-auth/",
+    core = CORE_URL + "customer/api-token-auth/"
+    r = requests.get(core,
         headers=headers)
     if "ERROR" in r.text:
         return r.text
