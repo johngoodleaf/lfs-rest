@@ -27,7 +27,7 @@ else:
     CORE_URL = 'http://localhost:8001/'
 CORE_ORDER_PATH = 'customer/api/customer/'
 
-
+PRODUCT_KEYS = ['slug', 'price', 'tax', 'quantity', 'name']
 
 def core_submit(request, order, cost, auth_check, *args, **kwargs):
     incoming_headers = request.META
@@ -37,17 +37,22 @@ def core_submit(request, order, cost, auth_check, *args, **kwargs):
     post_url = "%s%s%s/order/" % (CORE_URL, CORE_ORDER_PATH, user_id)
     logger.debug("core_submit post_url: %s" % post_url)
     data = json.dumps(order)
-    r = requests.post(post_url, data=data, headers=headers)
+    r = requests.post(post_url, data=data, headers={'ACCEPT': headers['ACCEPT'],
+                                                    'Authorization': headers['AUTHORIZATION'],
+                                                    'Content-Type': 'application/json'})
+    logger.debug("core_submit status_code: %s" % r.status_code)
     return r
 
 
 def check_auth(request):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
-    print headers
+    logger.debug("check_auth headers: %s" % headers)
     core = CORE_URL + "customer/api-token-auth/"
-    r = requests.get(core,
-        headers=headers)
+    logger.debug("check_auth core url: %s" % core)
+    #r = requests.get(core, headers=headers)
+    r = requests.get("https://core.stadi.us/customer/api-token-auth/", headers={"Authorization": headers['AUTHORIZATION']})
+    logger.debug("check_auth request status: %s" % r.status_code)
     if "ERROR" in r.text:
         return r.text
     else:
@@ -66,6 +71,7 @@ def submitted(request, *args, **kwargs):
         products = json.loads(request.raw_post_data)
         product_list = products['products']
         gratuity = float(products['gratuity'])
+        user = products['user']
 
         #print request.raw_post_data
         #print product_list
@@ -79,15 +85,19 @@ def submitted(request, *args, **kwargs):
             cart.add(product, amount=p['qty'])
             d = model_to_dict(product)
             d['quantity'] = p['qty']
-            product_data.append(d)
+
+            product_data.append({k: v for k, v in d.items() if k in PRODUCT_KEYS})
 
         cost = cart.get_price_net(request)
         tax = cart.get_tax(request)
 
         cost = locale.currency((cost + tax + gratuity), grouping=True)
 
+        auth_check = literal_eval(check_result)
         order_handler = core_submit(request, product_data,
-            cost, auth_check=literal_eval(check_result))
+                                    cost, auth_check=auth_check, user=user)
+
+        logger.debug("order_handler status: %s" % order_handler.status_code)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
