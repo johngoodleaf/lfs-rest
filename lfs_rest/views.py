@@ -15,7 +15,11 @@ import requests
 import pusher
 import locale
 import os
+import logging
+
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+
+logger = logging.getLogger("default")
 
 if not 'DEV' in os.environ:
     CORE_URL = 'https://core.stadi.us/'
@@ -29,9 +33,9 @@ def core_submit(request, order, cost, auth_check, *args, **kwargs):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
     user_id = auth_check['user_id']
-    print user_id
+    logger.debug("core_submit user_id: %s" % user_id)
     post_url = "%s%s%s/order/" % (CORE_URL, CORE_ORDER_PATH, user_id)
-    print post_url
+    logger.debug("core_submit post_url: %s" % post_url)
     data = json.dumps(order)
     r = requests.post(post_url, data=data, headers=headers)
     return r
