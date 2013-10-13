@@ -29,6 +29,7 @@ CORE_ORDER_PATH = 'customer/api/customer/'
 
 PRODUCT_KEYS = ['slug', 'price', 'tax', 'quantity', 'name']
 
+
 def core_submit(request, order, cost, auth_check, *args, **kwargs):
     incoming_headers = request.META
     headers = {k[5:]:v for k,v in incoming_headers.items() if k.startswith('HTTP')}
@@ -86,7 +87,8 @@ def submitted(request, *args, **kwargs):
             d = model_to_dict(product)
             d['quantity'] = p['qty']
 
-            product_data.append({k: v for k, v in d.items() if k in PRODUCT_KEYS})
+            product_data.append({k: v for k, v in d.items()
+                                 if k in PRODUCT_KEYS})
 
         cost = cart.get_price_net(request)
         tax = cart.get_tax(request)
@@ -94,10 +96,17 @@ def submitted(request, *args, **kwargs):
         cost = locale.currency((cost + tax + gratuity), grouping=True)
 
         auth_check = literal_eval(check_result)
-        order_handler = core_submit(request, product_data,
-                                    cost, auth_check=auth_check, user=user)
 
-        logger.debug("order_handler status: %s" % order_handler.status_code)
+        saved_order = {"cost": cost,
+                       "tax": tax,
+                       "items": product_data}
+
+        order_handler = core_submit(request, saved_order,
+                                    cost, auth_check=auth_check,
+                                    user=user)
+
+        logger.debug("order_handler status: %s" %
+                     order_handler.status_code)
 
         p = pusher.Pusher(app_id='40239',
             key='1ebb3cc2881a1562cc37',
