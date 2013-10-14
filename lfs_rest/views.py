@@ -56,6 +56,7 @@ def check_auth(request):
         return "ERROR: Missing Authorization header"
     r = requests.get("https://core.stadi.us/customer/api-token-auth/", headers={"Authorization": headers['AUTHORIZATION']})
     logger.debug("check_auth request status: %s" % r.status_code)
+    logger.debug("check_auth status: %s" % r.text)
     if "ERROR" in r.text:
         return r.text
     else:
@@ -66,7 +67,7 @@ def check_auth(request):
 def submitted(request, *args, **kwargs):
     if request.method == "POST":
         check_result = check_auth(request)
-        if 'ERROR' in check_result:
+        if 'ERROR' in check_result or 'Invalid' in check_result:
             print "Found ERROR condition"
             return HttpResponse(json.dumps({'ERROR': check_result}),
                 content_type="application/json")
@@ -75,9 +76,6 @@ def submitted(request, *args, **kwargs):
         product_list = products['products']
         gratuity = float(products['gratuity'])
         user = products['user']
-
-        #print request.raw_post_data
-        #print product_list
 
         cart = Cart()
         cart.save()
@@ -98,6 +96,9 @@ def submitted(request, *args, **kwargs):
         cost = locale.currency((cost + tax + gratuity), grouping=True)
 
         auth_check = literal_eval(check_result)
+
+        if auth_check['user'] != user:
+            return HttpResponse("Request from user %s does not match auth Token" % user, status=401)
 
         saved_order = {"cost": cost,
                        "tax": tax,
@@ -120,8 +121,7 @@ def submitted(request, *args, **kwargs):
              'cost': cost,
              'order': cart.id,
              })
-        return HttpResponse(json.dumps(
-            {'products': product_data, 'cost': cost}),
-            content_type="application/json")
+        return HttpResponse('{"status": "submitted"}',
+            content_type="application/json", status=201)
     else:
         return HttpResponse()
