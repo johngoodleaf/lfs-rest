@@ -101,6 +101,7 @@ def submitted(request, *args, **kwargs):
 
         saved_order = {"cost": cost,
                        "tax": tax,
+                       "gratuity": gratuity,
                        "items": product_data}
 
         order_handler = core_submit(request, saved_order,
