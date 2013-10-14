@@ -52,6 +52,8 @@ def check_auth(request):
     core = CORE_URL + "customer/api-token-auth/"
     logger.debug("check_auth core url: %s" % core)
     #r = requests.get(core, headers=headers)
+    if not 'authorization' in [x.lower() for x in headers.keys()]:
+        return "ERROR: Missing Authorization header"
     r = requests.get("https://core.stadi.us/customer/api-token-auth/", headers={"Authorization": headers['AUTHORIZATION']})
     logger.debug("check_auth request status: %s" % r.status_code)
     if "ERROR" in r.text:
